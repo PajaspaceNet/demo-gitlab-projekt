@@ -1,0 +1,16 @@
+stages:
+  - deploy
+
+deploy_to_vps:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H $VPS_IP >> ~/.ssh/known_hosts
+  script:
+    - echo "Tady by proběhl deploy na VPS přes SCP"
+  only:
+    - main
